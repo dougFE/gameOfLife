@@ -1,0 +1,127 @@
+﻿<Window x:Class="GameOfLife.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GameOfLife"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="530" Width="700" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Hello" Margin="10"/>
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="Grid">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0.2">
+                        <Button x:Name="Begin_Button" Content="Begin Simulation" Click="Simulation_Begin_Button" Width="100" HorizontalAlignment="Left" Margin="10"/>
+                        <Button x:Name="Stop_Button" Content="Pause Simulation" IsEnabled="False" Click="Simulation_Stop_Button" Width="100" HorizontalAlignment="Left" Margin="10"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2" Margin="0,0,0,0.2">
+                        <Label Content="Evolutions:" VerticalAlignment="Bottom"/>
+                        <Label x:Name="Evolution_Count" Content="0" VerticalAlignment="Bottom"/>
+                        <Label Content="Living Cells:" VerticalAlignment="Bottom"/>
+                        <Label x:Name="AliveCells_Count" Content="0" VerticalAlignment="Bottom"/>
+                        <Label Content="Percent Living:" VerticalAlignment="Bottom"/>
+                        <Label x:Name="PercentLive_Count" Content="0" VerticalAlignment="Bottom"/>
+                        <Label Content="%" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+
+                    <GroupBox BorderThickness="4" Padding="10" Margin="30" Width="Auto" Height="Auto" Header="Settings" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+                        <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Width="Auto" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Customize simulation settings here" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,0.4"/>
+
+                            <Label Content="Ticks per second:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox x:Name="UpdateDelta_Textbox" Text="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Grid.Row="1" Grid.Column="1"/>
+
+                            <Label Content="Alive Cell Color:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
+                            <ComboBox x:Name="LiveColor_CBox" VerticalAlignment="Center"  HorizontalAlignment="Left" Width="100" Grid.Row="2" Grid.Column="1" SelectedIndex="1">
+                                <ComboBoxItem>White</ComboBoxItem>
+                                <ComboBoxItem>Black</ComboBoxItem>
+                                <ComboBoxItem>Red</ComboBoxItem>
+                                <ComboBoxItem>Blue</ComboBoxItem>
+                                <ComboBoxItem>Green</ComboBoxItem>
+                                <ComboBoxItem>Yellow</ComboBoxItem>
+                            </ComboBox>
+
+                            <Label Content="Dead Cell Color:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0"/>
+                            <ComboBox x:Name="DeadColor_CBox" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Grid.Row="3" Grid.Column="1" SelectedIndex="0">
+                                <ComboBoxItem>White</ComboBoxItem>
+                                <ComboBoxItem>Black</ComboBoxItem>
+                                <ComboBoxItem>Red</ComboBoxItem>
+                                <ComboBoxItem>Blue</ComboBoxItem>
+                                <ComboBoxItem>Green</ComboBoxItem>
+                                <ComboBoxItem>Yellow</ComboBoxItem>
+                            </ComboBox>
+
+                            <Label Content="Cell Size (Pixels)" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="4" Grid.Column="0"/>
+                            <TextBox x:Name="CellSize_Textbox" Text="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Grid.Row="4" Grid.Column="1"/>
+
+                            <Button x:Name="Apply_Button" Grid.Row="5" Grid.ColumnSpan="2" Content="Apply" Width="100" HorizontalAlignment="Center" Margin="5,5,0,4.6" Click="ApplySettings_Button"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox BorderThickness="4" Width="340" Height="340" Header="Simulation" Grid.Row="1" Grid.Column="2" Margin="20">
+                        <Canvas x:Name="MainCanvas" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Info">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Content="What is the Game of Life?" HorizontalAlignment="Center" FontStyle="Oblique"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="14" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" TextAlignment="Justify">
+                        This project is simply a demonstration of Conway's Game of Life.
+                        The rules are quite simple. Every cell (a square on the board) is either alive or dead. Every cell has 8 neighbors in the vertical, horizontal, and diagonal directions. The game is turn-based, and every
+                        turn, decisions are made based on the neighbors of each cell. If a cell is alive and has 2 or 3 neighbors, it lives. Otherwise, it dies and will be a dead cell on the next turn. If a cell is currently
+                        dead and it has exactly 3 neighbors, it will come to life next turn. Otherwise, it will remain dead. The rules are simple, but the patterns and dynamics of the simulation are surprisingly complex,
+                        especially when considering that tweaking these rules at all seemingly always results in much less interesting simulations. Academically, it's seen as an interesting problem of indeterminancy. To others,
+                        it's just fun to watch the chaotic and patterned elements of the graphics. Enjoy!
+                    </TextBlock>
+                    <Label Grid.Column="1" Content="About Development" HorizontalAlignment="Center" FontStyle="Oblique"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Margin="14" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" TextAlignment="Justify">
+                        Conway's game of life has always been interesting to me, as it combines interesting ideas about game theory and predictability while also being a fun simulation that translates well to programming.
+                        When the game was originally invented, computers did not exist and so it was a hotly debated topic whether or not the outcome of the game could be predicted from the starting configuration. Now
+                        that computers have solved that problem (it's impossible to predict), it's fun to make your own version of the simulation and with relatively few rules have a dynamic ecosystem of cells all
+                        interacting with and impacting each other. I've made this game before, but I thought it would be fun to use WPF to add some visual flair and user-friendly customizability that console iterations
+                        certainly lack. I hope to add some new features to this like a drawable canvas where you decide what cells start as alive, or a drag-and-drop logic system to let the user change the rules and see
+                        how it impacts the simulation. This will do for now. - Douglas Frattini Edwards
+                    </TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
